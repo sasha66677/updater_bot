@@ -28,8 +28,20 @@ async def cmd_start(message: types.Message):
     )
 
 @dp.message(Command("pull"))
-async def cmd_test1(message: types.Message):
-    await message.answer("Ok")
+async def cmd_pull(message: types.Message):
+    script_path = "./updater-srcipt/update.sh"
+    
+    try:
+        result = subprocess.run([script_path], capture_output=True, text=True)
+
+        if result.returncode == 0:
+            output = result.stdout
+            await message.answer(f"Script executed successfully:\n{output}")
+        else:
+            error = result.stderr
+            await message.answer(f"Script execution failed:\n{error}")
+    except Exception as e:
+        await message.answer(f"An error occurred: {e}")
 
 
 
